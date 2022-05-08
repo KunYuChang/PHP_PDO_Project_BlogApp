@@ -1,5 +1,7 @@
 <?php
 
+namespace Blog\Dbc;
+
 function dbConnect()
 {
     $dsn = 'mysql:host=localhost;dbname=blog_app;charset=utf8';
@@ -7,11 +9,11 @@ function dbConnect()
     $pass = 'test123456';
 
     try {
-        $dbh = new PDO($dsn, $user, $pass, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        $dbh = new \PDO($dsn, $user, $pass, [
+            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
         ]);
         return $dbh;
-    } catch (PDOException $e) {
+    } catch (\PDOException $e) {
         echo '資料庫連線失敗' . $e->getMessage();
         exit();
     }
@@ -25,12 +27,10 @@ function getAllBlog()
     // 2. SQL執行
     $stmt = $dbh->query($sql);
     // 3. SQL結果取出
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     $dbh = null;
     return $result;
 }
-
-$blogData = getAllBlog();
 
 function setCategoryName($category)
 {
@@ -39,35 +39,29 @@ function setCategoryName($category)
     return '其他';
 }
 
+function getBlogById($id)
+{
+    if (empty($id)) {
+        exit('發生錯誤!');
+    }
 
-?>
 
-<!DOCTYPE html>
-<html lang="en">
+    $dbh = dbConnect();
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文章列表</title>
-</head>
 
-<body>
-    <table>
-        <tr>
-            <th>No</th>
-            <th>標題</th>
-            <th>分類</th>
-        </tr>
-        <?php foreach ($blogData as $row) : ?>
-            <tr>
-                <td><?= $row['id'] ?></td>
-                <td><?= $row['title'] ?></td>
-                <td><?= setCategoryName($row['category']) ?></td>
-                <td><a href="./detail.php?id=<?= $row['id'] ?>">查看文章</a></td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
-</body>
+    // 1. SQL準備
+    $stmt = $dbh->prepare('SELECT * FROM blog WHERE id = :id');
+    $stmt->bindValue(':id', $id, \PDO::PARAM_INT);
 
-</html>
+    // 2. SQL執行
+    $stmt->execute();
+
+    // 3. SQL結果取出
+    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+    if (!$result) {
+        exit('無此文章!');
+    }
+
+    return $result;
+}
