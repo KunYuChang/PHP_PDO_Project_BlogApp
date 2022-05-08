@@ -19,3 +19,5 @@
 ## Namespace
 
 1. 設置 Namespace 會引發找不到 PDO 物件的錯誤, 因此要宣告為根目錄的 PDO
+
+## OOP

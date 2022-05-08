@@ -1,7 +1,9 @@
 <?php
 
 require_once('./dbc.php');
-$blogData = getAllBlog();
+
+$dbc = new Dbc();
+$blogData = $dbc->getAllBlog();
 
 ?>
 
@@ -28,7 +30,7 @@ $blogData = getAllBlog();
             <tr>
                 <td><?= $row['id'] ?></td>
                 <td><?= $row['title'] ?></td>
-                <td><?= setCategoryName($row['category']) ?></td>
+                <td><?= $dbc->setCategoryName($row['category']) ?></td>
                 <td><a href="./detail.php?id=<?= $row['id'] ?>">查看文章</a></td>
             </tr>
         <?php endforeach; ?>
