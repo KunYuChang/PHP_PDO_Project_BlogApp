@@ -1,7 +1,5 @@
 <?php
 
-namespace Blog\Dbc;
-
 function dbConnect()
 {
     $dsn = 'mysql:host=localhost;dbname=blog_app;charset=utf8';
@@ -9,11 +7,11 @@ function dbConnect()
     $pass = 'test123456';
 
     try {
-        $dbh = new \PDO($dsn, $user, $pass, [
-            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
+        $dbh = new PDO($dsn, $user, $pass, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ]);
         return $dbh;
-    } catch (\PDOException $e) {
+    } catch (PDOException $e) {
         echo '資料庫連線失敗' . $e->getMessage();
         exit();
     }
@@ -27,7 +25,7 @@ function getAllBlog()
     // 2. SQL執行
     $stmt = $dbh->query($sql);
     // 3. SQL結果取出
-    $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $dbh = null;
     return $result;
 }
@@ -51,13 +49,13 @@ function getBlogById($id)
 
     // 1. SQL準備
     $stmt = $dbh->prepare('SELECT * FROM blog WHERE id = :id');
-    $stmt->bindValue(':id', $id, \PDO::PARAM_INT);
+    $stmt->bindValue(':id', $id, PDO::PARAM_INT);
 
     // 2. SQL執行
     $stmt->execute();
 
     // 3. SQL結果取出
-    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$result) {
         exit('無此文章!');
