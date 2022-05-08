@@ -33,6 +33,8 @@ $blogData = $blog->getAll();
                 <td><?= $row['title'] ?></td>
                 <td><?= $blog->setCategoryName($row['category']) ?></td>
                 <td><a href="./detail.php?id=<?= $row['id'] ?>">查看文章</a></td>
+                <td><a href="./update_form.php?id=<?= $row['id'] ?>">編輯</a></td>
+                <td><a href="./blog_delete.php?id=<?= $row['id'] ?>">刪除</a></td>
             </tr>
         <?php endforeach; ?>
     </table>

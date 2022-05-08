@@ -21,3 +21,9 @@
 1. 設置 Namespace 會引發找不到 PDO 物件的錯誤, 因此要宣告為根目錄的 PDO
 
 ## OOP
+
+## 除錯
+
+1. Apache 錯誤 (logs/apache_error.log)
+2. Database 錯誤 (logs/mysql_error_log.err)
+3. PHP 錯誤 (logs/php_error.log)

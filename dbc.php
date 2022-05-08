@@ -1,14 +1,18 @@
 <?php
 
+require_once('./env.php');
+
 class Dbc
 {
     protected $table_name;
 
     protected function dbConnect()
     {
-        $dsn = 'mysql:host=localhost;dbname=blog_app;charset=utf8';
-        $user = 'blog_user';
-        $pass = 'test123456';
+        $host = DB_HOST;
+        $dbname = DB_NAME;
+        $user = DB_USER;
+        $pass = DB_PASS;
+        $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8";
 
         try {
             $dbh = new PDO($dsn, $user, $pass, [
@@ -60,5 +64,24 @@ class Dbc
         }
 
         return $result;
+    }
+
+    public function delete($id)
+    {
+        if (empty($id)) {
+            exit('發生錯誤!');
+        }
+
+
+        $dbh = $this->dbConnect();
+
+        // 1. SQL準備
+        $stmt = $dbh->prepare("DELETE FROM $this->table_name WHERE id = :id");
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        // 2. SQL執行
+        $stmt->execute();
+
+        echo "刪除完成";
     }
 }
