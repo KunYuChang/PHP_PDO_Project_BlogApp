@@ -1,9 +1,10 @@
 <?php
 
-require_once('./dbc.php');
+require_once('./blog.php');
+ini_set('display_errors', 'On');
 
-$dbc = new Dbc();
-$blogData = $dbc->getAllBlog();
+$blog = new Blog();
+$blogData = $blog->getAll();
 
 ?>
 
@@ -30,7 +31,7 @@ $blogData = $dbc->getAllBlog();
             <tr>
                 <td><?= $row['id'] ?></td>
                 <td><?= $row['title'] ?></td>
-                <td><?= $dbc->setCategoryName($row['category']) ?></td>
+                <td><?= $blog->setCategoryName($row['category']) ?></td>
                 <td><a href="./detail.php?id=<?= $row['id'] ?>">查看文章</a></td>
             </tr>
         <?php endforeach; ?>

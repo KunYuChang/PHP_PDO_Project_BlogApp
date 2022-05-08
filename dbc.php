@@ -2,7 +2,9 @@
 
 class Dbc
 {
-    function dbConnect()
+    protected $table_name;
+
+    protected function dbConnect()
     {
         $dsn = 'mysql:host=localhost;dbname=blog_app;charset=utf8';
         $user = 'blog_user';
@@ -19,11 +21,11 @@ class Dbc
         }
     }
 
-    function getAllBlog()
+    public function getAll()
     {
         $dbh = $this->dbConnect();
         // 1. SQL準備
-        $sql = 'SELECT * FROM blog';
+        $sql = "SELECT * FROM $this->table_name";
         // 2. SQL執行
         $stmt = $dbh->query($sql);
         // 3. SQL結果取出
@@ -32,14 +34,9 @@ class Dbc
         return $result;
     }
 
-    function setCategoryName($category)
-    {
-        if ($category === '1') return '技術';
-        if ($category === '2') return '日常';
-        return '其他';
-    }
 
-    function getBlogById($id)
+
+    public function getById($id)
     {
         if (empty($id)) {
             exit('發生錯誤!');
@@ -49,7 +46,7 @@ class Dbc
         $dbh = $this->dbConnect();
 
         // 1. SQL準備
-        $stmt = $dbh->prepare('SELECT * FROM blog WHERE id = :id');
+        $stmt = $dbh->prepare("SELECT * FROM $this->table_name WHERE id = :id");
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
 
         // 2. SQL執行
@@ -63,24 +60,5 @@ class Dbc
         }
 
         return $result;
-    }
-
-    function blogCreate($blogs)
-    {
-        $sql = 'INSERT INTO blog(title, content, category, publish_status) VALUES(:title, :content, :category, :publish_status)';
-        $dbh = $this->dbConnect();
-        $dbh->beginTransaction();
-        try {
-            $stmt = $dbh->prepare($sql);
-            $stmt->bindValue(':title', $blogs['title'], PDO::PARAM_STR);
-            $stmt->bindValue(':content', $blogs['content'], PDO::PARAM_STR);
-            $stmt->bindValue(':category', $blogs['category'], PDO::PARAM_INT);
-            $stmt->bindValue(':publish_status', $blogs['publish_status'], PDO::PARAM_INT);
-            $stmt->execute();
-            $dbh->commit();
-        } catch (PDOException $e) {
-            $dbh->rollBack();
-            exit($e);
-        }
     }
 }
