@@ -64,6 +64,7 @@ function setCategoryName($category)
                 <td><?= $row['id'] ?></td>
                 <td><?= $row['title'] ?></td>
                 <td><?= setCategoryName($row['category']) ?></td>
+                <td><a href="./detail.php?id=<?= $row['id'] ?>">查看文章</a></td>
             </tr>
         <?php endforeach; ?>
     </table>

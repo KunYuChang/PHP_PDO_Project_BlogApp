@@ -11,3 +11,7 @@
 1. $stmt = "statement"
 2. $sth = "statement handle"
 3. $dbh = "database handle"
+
+## Prepare
+
+1. 使用 placeholder,防止 SQL injection
