@@ -1,13 +1,25 @@
 <?php
 
-$dsn = 'mysql:host=localhost;dbname=blog_app;charset=utf8';
-$user = 'blog_user';
-$pass = 'test123456';
+function dbConnect()
+{
+    $dsn = 'mysql:host=localhost;dbname=blog_app;charset=utf8';
+    $user = 'blog_user';
+    $pass = 'test123456';
 
-try {
-    $dbh = new PDO($dsn, $user, $pass, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    ]);
+    try {
+        $dbh = new PDO($dsn, $user, $pass, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        ]);
+        return $dbh;
+    } catch (PDOException $e) {
+        echo '資料庫連線失敗' . $e->getMessage();
+        exit();
+    }
+}
+
+function getAllBlog()
+{
+    $dbh = dbConnect();
     // 1. SQL準備
     $sql = 'SELECT * FROM blog';
     // 2. SQL執行
@@ -15,10 +27,18 @@ try {
     // 3. SQL結果取出
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $dbh = null;
-} catch (PDOException $e) {
-    echo '資料庫連線失敗' . $e->getMessage();
-    exit();
+    return $result;
 }
+
+$blogData = getAllBlog();
+
+function setCategoryName($category)
+{
+    if ($category === '1') return '技術';
+    if ($category === '2') return '日常';
+    return '其他';
+}
+
 
 ?>
 
@@ -39,11 +59,11 @@ try {
             <th>標題</th>
             <th>分類</th>
         </tr>
-        <?php foreach ($result as $row) : ?>
+        <?php foreach ($blogData as $row) : ?>
             <tr>
                 <td><?= $row['id'] ?></td>
                 <td><?= $row['title'] ?></td>
-                <td><?= $row['category'] ?></td>
+                <td><?= setCategoryName($row['category']) ?></td>
             </tr>
         <?php endforeach; ?>
     </table>
